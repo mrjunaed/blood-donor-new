@@ -1,7 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { Moon, Sun } from 'lucide-react';
 import { Heart, Search, Calendar, User, Phone, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 
 const BloodDonationApp = () => {
+  const [darkMode, setDarkMode] = useState(() => {
+    // Try to load theme from localStorage
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark';
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
   const [currentUser, setCurrentUser] = useState(null);
   const [donors, setDonors] = useState([]);
   const [searchBloodGroup, setSearchBloodGroup] = useState('');
@@ -233,16 +251,25 @@ const BloodDonationApp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
+    <div className={
+      `min-h-screen bg-gradient-to-br from-red-50 to-pink-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300`
+    }>
       {/* Header */}
-      <header className="bg-white shadow-md">
+      <header className="bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Heart className="w-8 h-8 text-red-500 fill-current" />
-              <h1 className="text-2xl font-bold text-gray-800">Blood Donation Network</h1>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Blood Donation Network</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <button
+                aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                onClick={() => setDarkMode((d) => !d)}
+                className="p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+              >
+                {darkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-gray-700" />}
+              </button>
               {currentUser ? (
                 <>
                   <span className="text-sm text-gray-600">Welcome, {currentUser.name}</span>
@@ -333,7 +360,7 @@ const BloodDonationApp = () => {
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8">
+  <div className="container mx-auto px-4 py-8">
         {view === 'home' && (
           <>
             {/* Search Section */}
@@ -635,18 +662,18 @@ const BloodDonationApp = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
+      <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-12 transition-colors duration-300">
         <div className="container mx-auto px-4 py-6">
           <div className="text-center">
-            <p className="text-gray-600">💉 Save lives by donating blood • Every donation counts</p>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="text-gray-600 dark:text-gray-300">💉 Save lives by donating blood • Every donation counts</p>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
               Note: This app uses shared storage - all profiles are visible to everyone
             </p>
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <p className="text-sm text-gray-700">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+              <p className="text-sm text-gray-700 dark:text-gray-200">
                 Developed by <span className="font-semibold text-red-600">Junaed</span>
               </p>
-              <p className="text-xs text-gray-500 mt-1">Blood Donation Network © 2024</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Blood Donation Network © 2024</p>
             </div>
           </div>
         </div>
